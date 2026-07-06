@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고사성어 이야기 — 한문 비주얼 노벨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2b2320; --ink-soft:#6a5d54; --paper:#f4ece0; --paper-2:#efe4d4;
+    --line:#d8c8b2; --accent:#b5522f; --accent-soft:#e5c8b8; --gold:#a9822f;
+    --good:#3f7d54; --bad:#b8503f; --shadow:0 10px 40px rgba(60,40,25,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Noto Sans KR",sans-serif;color:var(--ink);
+    background:radial-gradient(1200px 700px at 50% -10%,#fbf5ec,#e9dcc8);
+    min-height:100vh;display:flex;justify-content:center;padding:26px 16px 60px}
+  .wrap{width:100%;max-width:860px}
+  .serif{font-family:"Gowun Batang",serif}
+  .hanja{font-family:"Gowun Batang",serif}
+
+  /* top bar */
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+  .brand .mark{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;
+    display:grid;place-items:center;font-family:"Gowun Batang",serif;font-size:20px}
+  .brand b{font-weight:700;font-size:17px}
+  .prog{font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+  .prog .bar{width:120px;height:7px;border-radius:4px;background:var(--paper-2);overflow:hidden;border:1px solid var(--line)}
+  .prog .fill{height:100%;background:var(--accent);width:0%}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+
+  /* home / cover */
+  .cover{position:relative}
+  .cover .img{aspect-ratio:16/9;width:100%;background-size:cover;background-position:center;
+    background-color:#8a7355;background-image:linear-gradient(135deg,#a68a63,#7d6a52)}
+  .cover .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,12,.05),rgba(30,20,12,.55))}
+  .cover .title{position:absolute;left:0;right:0;bottom:0;padding:26px 28px;color:#fdf6ea}
+  .cover .title h1{font-family:"Gowun Batang",serif;font-size:34px;font-weight:700;letter-spacing:.5px}
+  .cover .title p{font-size:15px;opacity:.9;margin-top:6px}
+  .home-body{padding:20px 22px 26px}
+  .home-body h2{font-family:"Gowun Batang",serif;font-size:19px;margin-bottom:4px}
+  .home-body .sub{font-size:13.5px;color:var(--ink-soft);margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .tile{border:1px solid var(--line);border-radius:14px;background:var(--paper-2);
+    padding:14px 14px 13px;cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s;position:relative}
+  .tile:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(80,55,30,.15);border-color:var(--accent-soft)}
+  .tile .h{font-family:"Gowun Batang",serif;font-size:26px;letter-spacing:2px;color:var(--ink)}
+  .tile .k{font-size:14px;color:var(--ink-soft);margin-top:3px}
+  .tile .d{font-size:12.5px;color:var(--ink-soft);margin-top:9px;line-height:1.5;min-height:34px}
+  .tile .done{position:absolute;top:11px;right:11px;font-size:11px;color:var(--good);
+    border:1px solid var(--good);border-radius:20px;padding:2px 8px;opacity:0;font-weight:700}
+  .tile.learned .done{opacity:1}
+  .tile.learned{background:#eef3e8;border-color:#cfe0c0}
+
+  .review-btn{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{font-family:"Noto Sans KR",sans-serif;font-size:14.5px;font-weight:500;cursor:pointer;
+    border-radius:11px;padding:11px 18px;border:1px solid var(--line);background:#fff;color:var(--ink);
+    transition:background .12s,transform .1s}
+  .btn:hover{background:var(--paper-2)}
+  .btn:active{transform:scale(.98)}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn.primary:hover{background:#9c4426}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+
+  /* story / VN */
+  .scene{position:relative;aspect-ratio:16/9;width:100%;background-size:cover;background-position:center;
+    background-color:#cbb79a;display:flex;align-items:flex-end}
+  .scene.ph{background-image:none !important}
+  .ph-mark{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+    color:#7d6a52;background:repeating-linear-gradient(45deg,#e7d8bf,#e7d8bf 14px,#e1d1b5 14px,#e1d1b5 28px)}
+  .scene.ph .ph-mark{display:flex}
+  .ph-mark .big{font-family:"Gowun Batang",serif;font-size:52px;letter-spacing:6px;color:#8a7355}
+  .ph-mark .small{font-size:12px;margin-top:8px;opacity:.8}
+  .dbox{position:relative;width:100%;background:linear-gradient(180deg,rgba(20,14,9,0),rgba(20,14,9,.62) 34%);
+    padding:60px 26px 22px}
+  .dbox .name{display:inline-block;font-size:12.5px;font-weight:700;color:#2b2320;background:var(--accent-soft);
+    padding:3px 12px;border-radius:20px;margin-bottom:9px}
+  .dbox .name.narr{background:#efe4d4}
+  .dbox .line{font-family:"Gowun Batang",serif;font-size:19px;line-height:1.7;color:#fdf6ea;min-height:56px}
+  .stage-foot{padding:16px 22px 20px;background:var(--paper);display:flex;flex-direction:column;gap:11px}
+  .choice-q{font-size:14px;color:var(--ink-soft);margin-bottom:2px}
+  .opt{text-align:left;font-family:"Gowun Batang",serif;font-size:16px;padding:13px 16px;border-radius:12px;
+    border:1px solid var(--line);background:#fff;cursor:pointer;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--accent);background:#fff7f2}
+  .feedback{font-size:14.5px;color:var(--ink-soft);line-height:1.6;padding:2px 2px 0}
+  .nav{display:flex;justify-content:space-between;align-items:center}
+  .steps{display:flex;gap:6px}
+  .steps i{width:22px;height:5px;border-radius:3px;background:var(--line);display:block}
+  .steps i.on{background:var(--accent)}
+
+  /* learn panel */
+  .learn{padding:24px 24px 26px}
+  .learn .top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px}
+  .learn .top .hj{font-family:"Gowun Batang",serif;font-size:40px;letter-spacing:4px}
+  .learn .top .ko{font-size:17px;color:var(--ink-soft)}
+  .learn .top .src{margin-left:auto;font-size:12.5px;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:3px 11px}
+  .chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:10px;margin-bottom:18px}
+  .ch{border:1px solid var(--line);border-radius:13px;background:var(--paper-2);padding:12px 8px;text-align:center}
+  .ch .c{font-family:"Gowun Batang",serif;font-size:34px}
+  .ch .hu{font-size:13px;color:var(--ink-soft);margin-top:6px}
+  .block{margin-bottom:15px}
+  .block .lab{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin-bottom:5px}
+  .block .txt{font-size:15px;line-height:1.7}
+  .block.lit .txt{font-family:"Gowun Batang",serif}
+  .learn-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+
+  /* quiz */
+  .quiz{padding:24px 24px 28px}
+  .quiz .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .quiz .qhead .t{font-family:"Gowun Batang",serif;font-size:18px}
+  .quiz .qhead .c{font-size:13px;color:var(--ink-soft)}
+  .qbody{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px;min-height:96px}
+  .qbody .qtype{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:9px}
+  .qbody .qtext{font-size:16.5px;line-height:1.6}
+  .qbody .qbig{font-family:"Gowun Batang",serif;font-size:40px;letter-spacing:6px;text-align:center;padding:8px 0}
+  .qopts{display:grid;gap:10px}
+  .qopt{text-align:left;font-size:15.5px;padding:13px 16px;border-radius:12px;border:1px solid var(--line);
+    background:#fff;cursor:pointer;transition:.12s;font-family:inherit}
+  .qopt .hanja{font-family:"Gowun Batang",serif}
+  .qopt:hover{border-color:var(--accent)}
+  .qopt.right{background:#e7f2e5;border-color:var(--good);color:#2c5d3c}
+  .qopt.wrong{background:#f7e6e2;border-color:var(--bad);color:#8a3729}
+  .qopt.dim{opacity:.5}
+  .qexp{font-size:14px;color:var(--ink-soft);margin-top:14px;line-height:1.6;display:none}
+  .result{padding:34px 24px;text-align:center}
+  .result .score{font-family:"Gowun Batang",serif;font-size:52px;color:var(--accent)}
+  .result .msg{font-size:16px;margin:8px 0 22px;color:var(--ink-soft)}
+  .hidden{display:none}
+  .foot-note{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:16px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand" onclick="go('home')">
+      <div class="mark hanja">文</div>
+      <b>고사성어 이야기</b>
+    </div>
+    <div class="prog">
+      <span id="progText">0 / 8 배움</span>
+      <div class="bar"><div class="fill" id="progFill"></div></div>
+    </div>
+  </div>
+  <div id="app"></div>
+  <div class="foot-note">고1 한문 · 선택지로 읽는 고사성어 &nbsp;|&nbsp; 진도는 이 브라우저에 자동 저장돼요</div>
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const IDIOMS = [
+  {
+    id:"saeongjima", hanja:"塞翁之馬", ko:"새옹지마", src:"淮南子",
+    chars:[["塞","변방 새"],["翁","늙은이 옹"],["之","어조사 지"],["馬","말 마"]],
+    literal:"변방 노인의 말(馬)", meaning:"인생의 화(禍)와 복(福)은 예측할 수 없어 함부로 기뻐하거나 슬퍼할 것이 아니다.",
+    example:"시험에 떨어졌지만 그 덕에 더 좋은 길을 찾았으니 새옹지마다.",
+    situation:"자전거를 잃어버려 속상했는데, 걸어다니다 우연히 좋은 기회를 만났다.",
+    script:[
+      {img:1,n:1,t:"옛날 북쪽 국경 마을에, 점을 잘 치는 노인이 살았다."},
+      {img:1,n:1,t:"어느 날, 노인이 아끼던 말이 국경 너머로 달아나 버렸다."},
+      {img:1,s:"이웃",t:"저런… 그 좋은 말을 잃었으니 상심이 크시겠소."},
+      {img:1,choice:"노인은 뭐라고 답할까?",opts:[
+        {label:"“큰 손해요. 하늘이 나를 버렸소.”",fb:"그러나 노인은 그렇게 말하지 않았다. 아직 아무것도 끝나지 않았으니까."},
+        {label:"“글쎄, 이 일이 복이 될지 누가 알겠소.”",fb:"노인은 담담했다. 화가 복이 될지는 아무도 모르는 법."}
+      ]},
+      {img:2,n:1,t:"몇 달 뒤, 달아났던 말이 준마 한 마리를 데리고 돌아왔다."},
+      {img:2,n:1,t:"화가 복이 되고 복이 다시 화가 되니, 인생은 참으로 알 수 없었다."}
+    ]
+  },
+  {
+    id:"eobujiri", hanja:"漁父之利", ko:"어부지리", src:"戰國策",
+    chars:[["漁","고기잡을 어"],["父","아비 부"],["之","어조사 지"],["利","이로울 리"]],
+    literal:"어부(漁父)의 이익(利)", meaning:"둘이 서로 다투는 사이에 엉뚱한 제3자가 힘들이지 않고 이익을 가로챈다.",
+    example:"두 회사가 다투는 사이 제3의 회사가 어부지리로 시장을 차지했다.",
+    situation:"형과 동생이 마지막 치킨을 두고 싸우는 사이, 막내가 슬쩍 집어먹었다.",
+    script:[
+      {img:1,n:1,t:"강가 진흙밭, 조개가 입을 벌리고 햇볕을 쬐고 있었다."},
+      {img:1,n:1,t:"도요새가 조갯살을 쪼자, 조개가 입을 딱 다물어 부리를 물었다."},
+      {img:1,s:"도요새",t:"오늘도 내일도 비가 안 오면 넌 말라 죽는다!"},
+      {img:1,s:"조개",t:"오늘도 내일도 안 놓으면 넌 굶어 죽는다!"},
+      {img:1,choice:"둘은 어떻게 될까?",opts:[
+        {label:"끝까지 서로 버틴다",fb:"둘 다 한 치도 물러서지 않았다. 바로 그때…"},
+        {label:"서로 놓아주고 화해한다",fb:"하지만 둘 다 고집을 꺾지 않았다. 바로 그때…"}
+      ]},
+      {img:2,n:1,t:"지나가던 어부가 다투던 둘을 한꺼번에 잡아 망태기에 담았다."},
+      {img:2,n:1,t:"둘의 싸움은 엉뚱한 제3자에게 이익을 넘겨주고 말았다."}
+    ]
+  },
+  {
+    id:"osipbobaekbo", hanja:"五十步百步", ko:"오십보백보", src:"孟子",
+    chars:[["五","다섯 오"],["十","열 십"],["步","걸음 보"],["百","일백 백"],["步","걸음 보"]],
+    literal:"오십 보(步)나 백 보(步)나", meaning:"조금 낫고 못한 차이는 있으나 본질적으로는 서로 다를 바 없다.",
+    example:"숙제를 안 한 나나 5분 늦게 낸 너나 오십보백보다.",
+    situation:"40점 맞은 아이가 30점 맞은 아이를 비웃는다.",
+    script:[
+      {img:1,s:"양혜왕",t:"나는 백성을 위해 애쓰는데 왜 이웃 나라보다 백성이 늘지 않소?"},
+      {img:1,s:"맹자",t:"전쟁에 비유해 보겠습니다."},
+      {img:1,n:1,t:"전투가 벌어지자, 겁먹은 병사들이 갑옷을 버리고 달아났다."},
+      {img:1,n:1,t:"오십 보를 도망친 병사가, 백 보를 도망친 병사를 비웃었다."},
+      {img:1,choice:"오십 보 병사의 비웃음, 옳을까?",opts:[
+        {label:"옳다 — 덜 도망쳤으니까",fb:"맹자는 고개를 저었다."},
+        {label:"똑같다 — 둘 다 도망쳤으니까",fb:"맹자가 고개를 끄덕였다."}
+      ]},
+      {img:2,s:"맹자",t:"오십 보든 백 보든, 달아난 것은 마찬가지입니다."},
+      {img:2,n:1,t:"정도의 차이는 있어도 본질은 다르지 않다는 뜻이었다."}
+    ]
+  },
+  {
+    id:"ugongisan", hanja:"愚公移山", ko:"우공이산", src:"列子",
+    chars:[["愚","어리석을 우"],["公","어른 공"],["移","옮길 이"],["山","뫼 산"]],
+    literal:"우공(愚公)이 산(山)을 옮기다", meaning:"어리석어 보여도 꾸준히 노력하면 마침내 큰일을 이루어낸다.",
+    example:"매일 단어를 조금씩 외우다 보니 우공이산으로 수천 개를 익혔다.",
+    situation:"매일 조금씩, 산을 퍼 나르듯 꾸준히 하면 언젠가 목표를 이룬다.",
+    script:[
+      {img:1,n:1,t:"아흔 살 우공의 집 앞을, 두 개의 큰 산이 가로막고 있었다."},
+      {img:1,s:"우공",t:"온 가족이 힘을 모아 이 산을 파서 옮기자!"},
+      {img:1,s:"지수",t:"늙은 몸으로 언제 저 산을 다 옮기겠소? 어리석은 일이오."},
+      {img:1,choice:"우공은 뭐라 답할까?",opts:[
+        {label:"“그렇군, 포기하겠소.”",fb:"그러나 우공은 포기할 사람이 아니었다."},
+        {label:"“내가 죽어도 자손이 이어가면 되오.”",fb:"우공의 눈빛은 단단했다. 대를 이어서라도."}
+      ]},
+      {img:2,n:1,t:"쉬지 않는 우공의 꾸준함에 감동한 하늘이, 마침내 산을 옮겨 주었다."},
+      {img:2,n:1,t:"멈추지 않는 노력 앞에 불가능은 없다는 이야기다."}
+    ]
+  },
+  {
+    id:"gakjugugeom", hanja:"刻舟求劍", ko:"각주구검", src:"呂氏春秋",
+    chars:[["刻","새길 각"],["舟","배 주"],["求","구할 구"],["劍","칼 검"]],
+    literal:"배(舟)에 새겨(刻) 칼(劍)을 구하다(求)", meaning:"변한 상황을 모르고 낡은 방법만 고집하는 어리석고 융통성 없는 태도.",
+    example:"시대가 바뀌었는데 옛 방식만 고집하니 각주구검이 따로 없다.",
+    situation:"움직이는 배에서 칼을 빠뜨리고, 뱃전에 표시해두면 나중에 찾을 수 있다고 믿는다.",
+    script:[
+      {img:1,n:1,t:"초나라 사람이 배를 타고 강을 건너다, 그만 칼을 물에 빠뜨렸다."},
+      {img:1,n:1,t:"그는 서두르지 않고, 칼로 뱃전에 자국을 새겼다."},
+      {img:1,s:"초나라 사람",t:"칼이 여기서 떨어졌으니, 이 자국 밑을 찾으면 되지."},
+      {img:1,choice:"이 방법, 통할까?",opts:[
+        {label:"통한다",fb:"옆 사람들이 고개를 갸웃했다."},
+        {label:"안 통한다 — 배가 움직였으니까",fb:"정확하다. 배는 이미 저만치 흘러가고 있었다."}
+      ]},
+      {img:2,n:1,t:"배가 멈추자 그는 자국 밑 물속을 뒤졌지만, 칼은 그곳에 없었다."},
+      {img:2,n:1,t:"변한 상황을 모르고 옛 자리만 고집한 탓이었다."}
+    ]
+  },
+  {
+    id:"josammosa", hanja:"朝三暮四", ko:"조삼모사", src:"莊子",
+    chars:[["朝","아침 조"],["三","석 삼"],["暮","저물 모"],["四","넉 사"]],
+    literal:"아침(朝)에 셋(三), 저녁(暮)에 넷(四)", meaning:"눈앞의 차이에 홀려 결과가 같음을 깨닫지 못함. 또는 간사한 꾀로 남을 속임.",
+    example:"주는 방식만 바꿨을 뿐 총액은 같으니 조삼모사다.",
+    situation:"‘아침 3개 저녁 4개’는 싫다더니, ‘아침 4개 저녁 3개’라니까 좋아한다.",
+    script:[
+      {img:1,n:1,t:"원숭이를 기르던 저공이, 먹이가 부족해지자 원숭이들에게 말했다."},
+      {img:1,s:"저공",t:"도토리를 아침에 셋, 저녁에 넷 주겠다."},
+      {img:1,n:1,t:"원숭이들이 적다며 화를 내고 펄쩍펄쩍 뛰었다."},
+      {img:1,choice:"저공은 어떻게 할까?",opts:[
+        {label:"“그럼 아침 넷, 저녁 셋 주마.”",fb:"원숭이들이 좋아서 날뛰었다. 하지만 총량은…"},
+        {label:"먹이를 더 구해 온다",fb:"저공에겐 그럴 여유가 없었다. 대신 말만 바꿨다."}
+      ]},
+      {img:2,n:1,t:"아침 넷, 저녁 셋 — 하루 일곱 개로 총량은 똑같았지만 원숭이들은 만족했다."},
+      {img:2,n:1,t:"눈앞의 숫자에 홀려 결과가 같음을 못 보는 것을 말한다."}
+    ]
+  },
+  {
+    id:"hwaryongjeongjeong", hanja:"畫龍點睛", ko:"화룡점정", src:"歷代名畫記",
+    chars:[["畫","그림 화"],["龍","용 룡"],["點","점 점"],["睛","눈동자 정"]],
+    literal:"용(龍)을 그리고(畫) 눈동자(睛)를 점찍다(點)", meaning:"가장 중요한 마무리 하나를 더해 전체를 완성함.",
+    example:"발표 자료 끝에 핵심 한 줄을 넣어 화룡점정을 찍었다.",
+    situation:"거의 완성된 그림에 마지막으로 눈동자를 그려 넣자 작품이 살아났다.",
+    script:[
+      {img:1,n:1,t:"화가 장승요가 절 벽에 용 네 마리를 그렸다. 그런데 눈동자만은 찍지 않았다."},
+      {img:1,s:"구경꾼들",t:"어서 눈을 그려 넣으시오! 왜 비워 두는 것이오?"},
+      {img:1,s:"장승요",t:"눈을 찍으면 용이 날아가 버릴 것이오."},
+      {img:1,choice:"사람들은 믿었을까?",opts:[
+        {label:"믿지 않고 재촉했다",fb:"사람들은 억지로 눈을 그리게 했다. 그러자…"},
+        {label:"그대로 두었다",fb:"하지만 사람들은 참지 못하고 결국 재촉했다. 그러자…"}
+      ]},
+      {img:2,n:1,t:"두 마리의 눈에 점을 찍자, 천둥과 함께 용이 벽을 뚫고 하늘로 솟아올랐다."},
+      {img:2,n:1,t:"가장 중요한 마무리 하나가 전체를 완성한다는 뜻이다."}
+    ]
+  },
+  {
+    id:"deungnyongmun", hanja:"登龍門", ko:"등용문", src:"後漢書",
+    chars:[["登","오를 등"],["龍","용 룡"],["門","문 문"]],
+    literal:"용문(龍門)에 오르다(登)", meaning:"어려운 관문을 통과하여 크게 출세하거나 입신양명함.",
+    example:"그 대회 입상은 신인 배우에게 등용문이 되었다.",
+    situation:"잉어가 거센 폭포를 뛰어넘으면 용이 된다는 전설의 관문.",
+    script:[
+      {img:1,n:1,t:"황하 상류의 거센 폭포, 용문(龍門). 수많은 물고기가 오르려다 떠내려갔다."},
+      {img:1,n:1,t:"잉어 한 마리가 물살을 거슬러 폭포에 도전했다."},
+      {img:1,choice:"잉어는 어떻게 할까?",opts:[
+        {label:"포기하고 돌아선다",fb:"하지만 잉어는 물러서지 않았다."},
+        {label:"끝까지 뛰어오른다",fb:"잉어는 온 힘을 다해 물살 위로 튀어올랐다."}
+      ]},
+      {img:2,n:1,t:"마침내 폭포를 뛰어넘은 잉어는, 용이 되어 하늘로 올랐다."},
+      {img:2,n:1,t:"어려운 관문을 통과해 크게 되는 것을 ‘등용문’이라 한다."}
+    ]
+  }
+];
+
+/* ---------------- STATE ---------------- */
+const KEY="gosaseongeo_progress_v1";
+let learned = loadProgress();
+let bestScore = loadBest();
+let cur=null, step=0, answered=false, answeredFb="";
+
+function loadProgress(){try{return new Set(JSON.parse(localStorage.getItem(KEY)||"[]"))}catch(e){return new Set()}}
+function saveProgress(){try{localStorage.setItem(KEY,JSON.stringify([...learned]))}catch(e){}}
+function loadBest(){try{return parseInt(localStorage.getItem(KEY+"_best")||"0",10)}catch(e){return 0}}
+function saveBest(v){try{localStorage.setItem(KEY+"_best",String(v))}catch(e){}}
+
+const app=()=>document.getElementById("app");
+function imgPath(idiom,n){return "images/"+idiom.id+"_"+n+".png"}
+
+function updateProg(){
+  document.getElementById("progText").textContent=learned.size+" / "+IDIOMS.length+" 배움";
+  document.getElementById("progFill").style.width=(learned.size/IDIOMS.length*100)+"%";
+}
+
+/* ---------------- ROUTER ---------------- */
+function go(view,arg){
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(view==="home") renderHome();
+  else if(view==="story"){cur=IDIOMS[arg];step=0;answered=false;renderStory();}
+  else if(view==="learn"){renderLearn();}
+  else if(view==="quiz") startQuiz(arg);
+  updateProg();
+}
+
+/* ---------------- HOME ---------------- */
+function renderHome(){
+  const tiles=IDIOMS.map((it,i)=>`
+    <div class="tile ${learned.has(it.id)?'learned':''}" onclick="go('story',${i})">
+      <div class="done">배움 ✓</div>
+      <div class="h hanja">${it.hanja}</div>
+      <div class="k">${it.ko}</div>
+      <div class="d">${learned.has(it.id)?it.meaning.slice(0,38)+"…":"이야기로 만나기 →"}</div>
+    </div>`).join("");
+  const canQuiz=learned.size>0;
+  app().innerHTML=`
+    <div class="card cover">
+      <div class="img" style="background-image:url('images/cover.png')"></div>
+      <div class="veil"></div>
+      <div class="title">
+        <h1>고사성어, 이야기로 읽다</h1>
+        <p>선택하며 읽는 여덟 편의 옛이야기 · 고1 한문</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="home-body">
+        <h2>오늘의 이야기를 고르세요</h2>
+        <div class="sub">이야기를 끝까지 읽으면 한자 풀이와 뜻이 열리고, ‘배움’ 표시가 붙어요.</div>
+        <div class="grid">${tiles}</div>
+        <div class="review-btn">
+          <button class="btn primary" ${canQuiz?"":"disabled"} onclick="go('quiz','all')">종합 복습 퀴즈 ${canQuiz?"":"(먼저 하나 배우기)"}</button>
+          ${bestScore?`<span style="align-self:center;font-size:13px;color:var(--ink-soft)">최고 기록 ${bestScore}점</span>`:""}
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ---------------- STORY (VN) ---------------- */
+function renderStory(){
+  const sc=cur.script[step];
+  const total=cur.script.length;
+  const dots=cur.script.map((_,i)=>`<i class="${i<=step?'on':''}"></i>`).join("");
+  const path=imgPath(cur,sc.img);
+  const name = sc.choice ? "" : (sc.s? `<span class="name">${sc.s}</span>` : `<span class="name narr">이야기</span>`);
+  let footer="";
+  if(sc.choice){
+    if(!answered){
+      footer=`<div class="choice-q">${sc.choice}</div>`+
+        sc.opts.map((o,i)=>`<button class="opt" onclick="pick(${i})">${o.label}</button>`).join("");
+    }else{
+      footer=`<div class="feedback">${answeredFb}</div>
+        <div class="nav" style="margin-top:6px"><div class="steps">${dots}</div>
+        <button class="btn primary" onclick="next()">계속 →</button></div>`;
+    }
+  }else{
+    const last = step===total-1;
+    footer=`<div class="nav"><div class="steps">${dots}</div>
+      <button class="btn primary" onclick="next()">${last?"이야기 마치기 →":"다음 →"}</button></div>`;
+  }
+  const lineHtml = sc.choice && !answered ? "" : `<div class="line serif">${sc.t||""}</div>`;
+  app().innerHTML=`
+    <div class="card">
+      <div class="scene" style="background-image:url('${path}')" data-try="${path}">
+        <div class="ph-mark"><div class="big hanja">${cur.hanja}</div><div class="small">${cur.ko} · 그림 자리 (${cur.id}_${sc.img}.png)</div></div>
+        <div class="dbox">${name}${lineHtml}</div>
+      </div>
+      <div class="stage-foot">${footer}</div>
+    </div>`;
+  probeImg(cur,sc.img);
+}
+function pick(i){answered=true;answeredFb=cur.script[step].opts[i].fb;renderStory();}
+function next(){
+  if(step>=cur.script.length-1){ go('learn'); return; }
+  step++; answered=false; renderStory();
+}
+
+/* background image existence probe → toggle placeholder */
+function probeImg(idiom,n){
+  const el=document.querySelector(".scene");
+  if(!el) return;
+  const src=imgPath(idiom,n);
+  const test=new Image();
+  test.onload=()=>{ el.classList.remove("ph"); el.style.backgroundImage="url('"+src+"')"; };
+  test.onerror=()=>{ el.classList.add("ph"); el.style.backgroundImage="none"; };
+  test.src=src;
+}
+
+/* ---------------- LEARN ---------------- */
+function renderLearn(){
+  const it=cur;
+  learned.add(it.id); saveProgress();
+  const chars=it.chars.map(c=>`<div class="ch"><div class="c hanja">${c[0]}</div><div class="hu">${c[1]}</div></div>`).join("");
+  app().innerHTML=`
+    <div class="card">
+      <div class="learn">
+        <div class="top">
+          <div class="hj hanja">${it.hanja}</div>
+          <div class="ko">${it.ko}</div>
+          <div class="src hanja">出典 ${it.src}</div>
+        </div>
+        <div class="block"><div class="lab">한자 풀이</div></div>
+        <div class="chars">${chars}</div>
+        <div class="block lit"><div class="lab">겉뜻 (직역)</div><div class="txt">${it.literal}</div></div>
+        <div class="block"><div class="lab">속뜻</div><div class="txt">${it.meaning}</div></div>
+        <div class="block"><div class="lab">예문</div><div class="txt">“${it.example}”</div></div>
+        <div class="learn-foot">
+          <button class="btn primary" onclick="go('quiz','one')">이 성어 퀴즈 풀기</button>
+          <button class="btn" onclick="go('home')">목록으로</button>
+        </div>
+      </div>
+    </div>`;
+  updateProg();
+}
+
+/* ---------------- QUIZ ---------------- */
+let quizQs=[], qi=0, qScore=0, qMode="all";
+const TYPES=["fill","meaning","situation","reading"];
+
+function pool(){return IDIOMS.filter(it=>learned.has(it.id));}
+function rand(a){return a[Math.floor(Math.random()*a.length)]}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function sample(arr,n,exclude){const s=shuffle(arr.filter(x=>x!==exclude));return s.slice(0,n)}
+
+function makeQ(idiom,type){
+  if(type==="reading"){
+    const ch=rand(idiom.chars);
+    const allHu=[...new Set(IDIOMS.flatMap(it=>it.chars.map(c=>c[1])))];
+    const opts=shuffle([ch[1],...sample(allHu,3,ch[1])]);
+    return {type:"한자 낱글자 음·훈",big:ch[0],text:"이 한자의 음과 훈으로 알맞은 것은?",
+      opts,ans:opts.indexOf(ch[1]),exp:`${idiom.hanja}(${idiom.ko})의 ‘${ch[0]}’ — ${ch[1]}`,hanja:true};
+  }
+  if(type==="fill"){
+    const arr=idiom.hanja.split("");
+    const idx=Math.floor(Math.random()*arr.length);
+    const answer=arr[idx];
+    const shown=arr.map((c,i)=>i===idx?"◯":c).join("");
+    const allCh=[...new Set(IDIOMS.flatMap(it=>it.hanja.split("")))];
+    const opts=shuffle([answer,...sample(allCh,3,answer)]);
+    return {type:"빈칸 성어 완성",big:shown,text:`◯에 들어갈 한자는? (${idiom.ko})`,
+      opts,ans:opts.indexOf(answer),exp:`${idiom.hanja} — ‘${answer}’ ${idiom.chars.find(c=>c[0]===answer)?.[1]||""}`,hanja:true};
+  }
+  if(type==="meaning"){
+    const opts=shuffle([idiom,...sample(IDIOMS,3,idiom)]);
+    return {type:"뜻풀이 연결",text:idiom.meaning,
+      opts:opts.map(o=>`${o.hanja} <span style="color:#8a7355">${o.ko}</span>`),
+      ans:opts.indexOf(idiom),exp:`정답: ${idiom.hanja}(${idiom.ko})`,hanja:false};
+  }
+  // situation
+  const opts=shuffle([idiom,...sample(IDIOMS,3,idiom)]);
+  return {type:"상황에 맞는 성어 고르기",text:`상황: ${idiom.situation}`,
+    opts:opts.map(o=>`${o.hanja} <span style="color:#8a7355">${o.ko}</span>`),
+    ans:opts.indexOf(idiom),exp:`정답: ${idiom.hanja}(${idiom.ko}) — ${idiom.meaning}`,hanja:false};
+}
+
+function startQuiz(mode){
+  qMode=mode; qi=0; qScore=0; quizQs=[];
+  if(mode==="one"){
+    const it=cur;
+    quizQs=[makeQ(it,"reading"),makeQ(it,"fill"),makeQ(it,"meaning")];
+  }else{
+    const p=pool(); const n=Math.min(10,Math.max(3,p.length*2));
+    for(let i=0;i<n;i++){quizQs.push(makeQ(rand(p),rand(TYPES)));}
+  }
+  renderQuiz();
+}
+function renderQuiz(){
+  const q=quizQs[qi];
+  const bigHtml=q.big?`<div class="qbig hanja">${q.big}</div>`:"";
+  const opts=q.opts.map((o,i)=>`<button class="qopt ${q.hanja&&!q.big?'':''}" onclick="answerQ(${i})">${q.big?'<span class="hanja">'+o+'</span>':o}</button>`).join("");
+  app().innerHTML=`
+    <div class="card"><div class="quiz">
+      <div class="qhead"><div class="t">${qMode==='one'?cur.ko+' 퀴즈':'종합 복습 퀴즈'}</div>
+        <div class="c">${qi+1} / ${quizQs.length} · 점수 ${qScore}</div></div>
+      <div class="qbody">
+        <div class="qtype">${q.type}</div>
+        ${bigHtml}
+        <div class="qtext">${q.text}</div>
+      </div>
+      <div class="qopts" id="qopts">${opts}</div>
+      <div class="qexp" id="qexp">${q.exp}</div>
+      <div class="nav" style="margin-top:16px"><span></span>
+        <button class="btn primary hidden" id="qnext" onclick="nextQ()">${qi<quizQs.length-1?'다음 문제 →':'결과 보기 →'}</button></div>
+    </div></div>`;
+}
+function answerQ(i){
+  const q=quizQs[qi];
+  const btns=[...document.querySelectorAll("#qopts .qopt")];
+  btns.forEach((b,idx)=>{b.onclick=null;
+    if(idx===q.ans)b.classList.add("right");
+    else if(idx===i)b.classList.add("wrong");
+    else b.classList.add("dim");});
+  if(i===q.ans)qScore++;
+  document.getElementById("qexp").style.display="block";
+  document.getElementById("qnext").classList.remove("hidden");
+}
+function nextQ(){
+  if(qi<quizQs.length-1){qi++;renderQuiz();}
+  else renderResult();
+}
+function renderResult(){
+  const total=quizQs.length;
+  const pct=Math.round(qScore/total*100);
+  let msg = pct===100?"완벽해요! 다 맞혔어요.":pct>=70?"잘했어요! 조금만 더 다지면 돼요.":"괜찮아요. 이야기를 다시 읽고 도전해봐요.";
+  if(qMode==="all" && qScore>bestScore){bestScore=qScore;saveBest(bestScore);msg="새 최고 기록! "+msg;}
+  app().innerHTML=`
+    <div class="card"><div class="result">
+      <div class="score hanja">${qScore} / ${total}</div>
+      <div class="msg">${msg}</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn primary" onclick="startQuiz('${qMode}')">다시 풀기</button>
+        <button class="btn" onclick="go('home')">목록으로</button>
+      </div>
+    </div></div>`;
+  updateProg();
+}
+
+/* ---------------- INIT ---------------- */
+renderHome();updateProg();
+</script>
+</body>
+</html>
