@@ -6,131 +6,189 @@
 <title>고사성어 이야기 — 한문 비주얼 노벨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#2b2320; --ink-soft:#6a5d54; --paper:#f4ece0; --paper-2:#efe4d4;
-    --line:#d8c8b2; --accent:#b5522f; --accent-soft:#e5c8b8; --gold:#a9822f;
-    --good:#3f7d54; --bad:#b8503f; --shadow:0 10px 40px rgba(60,40,25,.18);
+    --paper:#f7f3ec;        /* 종이 */
+    --paper-dim:#efe9de;    /* 호버 톤 */
+    --ink:#1c1a17;          /* 먹 */
+    --ink-soft:#756c60;     /* 옅은 먹 */
+    --line:#ddd5c7;         /* 헤어라인 */
+    --line-soft:#e9e3d8;
+    --vermilion:#a83c2b;    /* 주묵 — 아주 소량만 */
+    --good:#4c6b52;         /* 저채도 초록 */
+    --serif:"Noto Serif KR",serif;
+    --sans:"Noto Sans KR",sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"Noto Sans KR",sans-serif;color:var(--ink);
-    background:radial-gradient(1200px 700px at 50% -10%,#fbf5ec,#e9dcc8);
-    min-height:100vh;display:flex;justify-content:center;padding:26px 16px 60px}
-  .wrap{width:100%;max-width:860px}
-  .serif{font-family:"Gowun Batang",serif}
-  .hanja{font-family:"Gowun Batang",serif}
+  html{background:var(--paper)}
+  body{font-family:var(--sans);font-size:15px;line-height:1.7;color:var(--ink);
+    background:var(--paper);min-height:100vh;display:flex;justify-content:center;
+    padding:44px 20px 96px;-webkit-font-smoothing:antialiased}
+  .wrap{width:100%;max-width:880px}
+  .serif{font-family:var(--serif)}
+  .hanja{font-family:var(--serif)}
+  button{font-family:var(--sans);color:inherit}
+  :focus-visible{outline:2px solid var(--vermilion);outline-offset:2px}
 
-  /* top bar */
-  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-  .brand{display:flex;align-items:center;gap:10px;cursor:pointer}
-  .brand .mark{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;
-    display:grid;place-items:center;font-family:"Gowun Batang",serif;font-size:20px}
-  .brand b{font-weight:700;font-size:17px}
-  .prog{font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
-  .prog .bar{width:120px;height:7px;border-radius:4px;background:var(--paper-2);overflow:hidden;border:1px solid var(--line)}
-  .prog .fill{height:100%;background:var(--accent);width:0%}
+  /* ---------- top bar ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;
+    padding-bottom:20px;margin-bottom:36px;border-bottom:1px solid var(--ink)}
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer;background:none;border:none}
+  .brand .mark{width:30px;height:30px;border-radius:4px;background:var(--vermilion);color:var(--paper);
+    display:grid;place-items:center;font-family:var(--serif);font-size:17px;font-weight:600}
+  .brand b{font-family:var(--serif);font-weight:600;font-size:16px;letter-spacing:.04em}
+  .prog{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:12px;letter-spacing:.03em}
+  .prog .bar{width:110px;height:2px;background:var(--line);overflow:hidden}
+  .prog .fill{height:100%;background:var(--vermilion);width:0%;transition:width .25s ease}
 
-  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  /* ---------- card ---------- */
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:8px;
+    overflow:hidden;animation:appear .22s ease both}
+  @keyframes appear{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    .card{animation:none}
+    .prog .fill{transition:none}
+  }
 
-  /* home / cover */
-  .cover{position:relative}
-  .cover .img{aspect-ratio:16/9;width:100%;background-size:cover;background-position:center;
-    background-color:#8a7355;background-image:linear-gradient(135deg,#a68a63,#7d6a52)}
-  .cover .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,12,.05),rgba(30,20,12,.55))}
-  .cover .title{position:absolute;left:0;right:0;bottom:0;padding:26px 28px;color:#fdf6ea}
-  .cover .title h1{font-family:"Gowun Batang",serif;font-size:34px;font-weight:700;letter-spacing:.5px}
-  .cover .title p{font-size:15px;opacity:.9;margin-top:6px}
-  .home-body{padding:20px 22px 26px}
-  .home-body h2{font-family:"Gowun Batang",serif;font-size:19px;margin-bottom:4px}
-  .home-body .sub{font-size:13.5px;color:var(--ink-soft);margin-bottom:16px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-  .tile{border:1px solid var(--line);border-radius:14px;background:var(--paper-2);
-    padding:14px 14px 13px;cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s;position:relative}
-  .tile:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(80,55,30,.15);border-color:var(--accent-soft)}
-  .tile .h{font-family:"Gowun Batang",serif;font-size:26px;letter-spacing:2px;color:var(--ink)}
-  .tile .k{font-size:14px;color:var(--ink-soft);margin-top:3px}
-  .tile .d{font-size:12.5px;color:var(--ink-soft);margin-top:9px;line-height:1.5;min-height:34px}
-  .tile .done{position:absolute;top:11px;right:11px;font-size:11px;color:var(--good);
-    border:1px solid var(--good);border-radius:20px;padding:2px 8px;opacity:0;font-weight:700}
+  /* ---------- cover (editorial) ---------- */
+  .cover .img{position:relative;aspect-ratio:16/9;width:100%;
+    background-size:cover;background-position:center;background-color:var(--paper-dim);
+    border-bottom:1px solid var(--ink)}
+  .vtitle{position:absolute;top:20px;right:20px;writing-mode:vertical-rl;
+    font-family:var(--serif);font-weight:600;font-size:15px;letter-spacing:.42em;
+    color:var(--ink);background:rgba(247,243,236,.88);padding:14px 7px;line-height:1}
+  .cover-title{display:flex;align-items:flex-end;justify-content:space-between;
+    gap:24px;padding:30px 34px 32px}
+  .cover-title h1{font-family:var(--serif);font-weight:700;
+    font-size:clamp(22px,3.6vw,30px);letter-spacing:.02em;line-height:1.4}
+  .cover-title p{font-size:13px;color:var(--ink-soft);margin-top:8px;letter-spacing:.03em}
+  .seal{flex:none;width:44px;height:44px;border-radius:4px;background:var(--vermilion);
+    color:var(--paper);display:grid;place-items:center;
+    font-family:var(--serif);font-size:22px;font-weight:600}
+
+  /* ---------- home list ---------- */
+  .home-body{padding:34px 34px 38px}
+  .home-body h2{font-family:var(--serif);font-weight:600;font-size:18px;letter-spacing:.02em}
+  .home-body .sub{font-size:13px;color:var(--ink-soft);margin:6px 0 28px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:14px}
+  .tile{position:relative;text-align:left;border:1px solid var(--line-soft);border-radius:6px;
+    background:var(--paper);padding:22px 18px 18px;cursor:pointer;
+    transition:background-color .18s ease,border-color .18s ease}
+  .tile:hover{background:var(--paper-dim);border-color:var(--line)}
+  .tile .h{font-family:var(--serif);font-size:27px;font-weight:600;letter-spacing:.14em;color:var(--ink);line-height:1.35}
+  .tile .k{font-size:13px;color:var(--ink-soft);margin-top:6px;letter-spacing:.02em}
+  .tile .d{font-size:11.5px;color:var(--ink-soft);margin-top:14px;line-height:1.6;min-height:34px}
+  .tile .done{position:absolute;top:14px;right:14px;font-size:10.5px;letter-spacing:.08em;
+    color:var(--good);opacity:0}
   .tile.learned .done{opacity:1}
-  .tile.learned{background:#eef3e8;border-color:#cfe0c0}
+  .tile.learned .h{color:var(--ink)}
+  .tile.learned{border-color:var(--line)}
 
-  .review-btn{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
-  .btn{font-family:"Noto Sans KR",sans-serif;font-size:14.5px;font-weight:500;cursor:pointer;
-    border-radius:11px;padding:11px 18px;border:1px solid var(--line);background:#fff;color:var(--ink);
-    transition:background .12s,transform .1s}
-  .btn:hover{background:var(--paper-2)}
-  .btn:active{transform:scale(.98)}
-  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-  .btn.primary:hover{background:#9c4426}
-  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .review-btn{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 
-  /* story / VN */
+  /* ---------- buttons: line style ---------- */
+  .btn{font-family:var(--sans);font-size:13.5px;font-weight:500;letter-spacing:.03em;cursor:pointer;
+    border-radius:6px;padding:11px 22px;border:1px solid var(--line);background:transparent;color:var(--ink);
+    transition:background-color .18s ease,border-color .18s ease}
+  .btn:hover{background:var(--paper-dim);border-color:var(--ink-soft)}
+  .btn.primary{border-color:var(--vermilion);color:var(--vermilion)}
+  .btn.primary:hover{background:rgba(168,60,43,.07)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn:disabled:hover{background:transparent;border-color:var(--vermilion)}
+
+  /* ---------- story / VN ---------- */
   .scene{position:relative;aspect-ratio:16/9;width:100%;background-size:cover;background-position:center;
-    background-color:#cbb79a;display:flex;align-items:flex-end}
+    background-color:var(--paper-dim);display:flex;align-items:flex-end}
   .scene.ph{background-image:none !important}
   .ph-mark{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
-    color:#7d6a52;background:repeating-linear-gradient(45deg,#e7d8bf,#e7d8bf 14px,#e1d1b5 14px,#e1d1b5 28px)}
+    color:var(--ink-soft);background:var(--paper-dim)}
   .scene.ph .ph-mark{display:flex}
-  .ph-mark .big{font-family:"Gowun Batang",serif;font-size:52px;letter-spacing:6px;color:#8a7355}
-  .ph-mark .small{font-size:12px;margin-top:8px;opacity:.8}
-  .dbox{position:relative;width:100%;background:linear-gradient(180deg,rgba(20,14,9,0),rgba(20,14,9,.62) 34%);
-    padding:60px 26px 22px}
-  .dbox .name{display:inline-block;font-size:12.5px;font-weight:700;color:#2b2320;background:var(--accent-soft);
-    padding:3px 12px;border-radius:20px;margin-bottom:9px}
-  .dbox .name.narr{background:#efe4d4}
-  .dbox .line{font-family:"Gowun Batang",serif;font-size:19px;line-height:1.7;color:#fdf6ea;min-height:56px}
-  .stage-foot{padding:16px 22px 20px;background:var(--paper);display:flex;flex-direction:column;gap:11px}
-  .choice-q{font-size:14px;color:var(--ink-soft);margin-bottom:2px}
-  .opt{text-align:left;font-family:"Gowun Batang",serif;font-size:16px;padding:13px 16px;border-radius:12px;
-    border:1px solid var(--line);background:#fff;cursor:pointer;transition:border-color .12s,background .12s}
-  .opt:hover{border-color:var(--accent);background:#fff7f2}
-  .feedback{font-size:14.5px;color:var(--ink-soft);line-height:1.6;padding:2px 2px 0}
+  .ph-mark .big{font-family:var(--serif);font-size:52px;font-weight:600;letter-spacing:.2em;color:#cfc5b2}
+  .ph-mark .small{font-size:11px;margin-top:12px;letter-spacing:.04em;opacity:.75}
+  .dbox{position:relative;width:100%;
+    background:linear-gradient(180deg,rgba(18,14,10,0),rgba(18,14,10,.5) 46%);
+    padding:76px 34px 26px}
+  .dbox .name{display:inline-block;font-size:11px;font-weight:500;letter-spacing:.14em;
+    color:#f3ebdd;border:1px solid rgba(243,235,221,.55);border-radius:3px;
+    padding:3px 10px;margin-bottom:12px}
+  .dbox .name.narr{border-color:rgba(243,235,221,.3);color:rgba(243,235,221,.8)}
+  .dbox .line{font-family:var(--serif);font-size:18px;line-height:1.8;color:#f7f1e5;min-height:60px;
+    text-shadow:0 1px 8px rgba(18,14,10,.4)}
+  .stage-foot{padding:22px 30px 26px;display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line-soft)}
+  .choice-q{font-size:13px;color:var(--ink-soft);letter-spacing:.02em}
+  .opt{text-align:left;font-family:var(--serif);font-size:15.5px;line-height:1.7;padding:15px 20px;
+    border-radius:6px;border:1px solid var(--line);background:transparent;cursor:pointer;
+    transition:background-color .18s ease,border-color .18s ease}
+  .opt:hover{border-color:var(--ink-soft);background:var(--paper-dim)}
+  .feedback{font-family:var(--serif);font-size:14.5px;color:var(--ink-soft);line-height:1.8;padding:2px 2px 0}
   .nav{display:flex;justify-content:space-between;align-items:center}
-  .steps{display:flex;gap:6px}
-  .steps i{width:22px;height:5px;border-radius:3px;background:var(--line);display:block}
-  .steps i.on{background:var(--accent)}
+  .steps{display:flex;gap:7px}
+  .steps i{width:20px;height:1px;background:var(--line);display:block}
+  .steps i.on{background:var(--ink);height:2px}
 
-  /* learn panel */
-  .learn{padding:24px 24px 26px}
-  .learn .top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px}
-  .learn .top .hj{font-family:"Gowun Batang",serif;font-size:40px;letter-spacing:4px}
-  .learn .top .ko{font-size:17px;color:var(--ink-soft)}
-  .learn .top .src{margin-left:auto;font-size:12.5px;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:3px 11px}
-  .chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:10px;margin-bottom:18px}
-  .ch{border:1px solid var(--line);border-radius:13px;background:var(--paper-2);padding:12px 8px;text-align:center}
-  .ch .c{font-family:"Gowun Batang",serif;font-size:34px}
-  .ch .hu{font-size:13px;color:var(--ink-soft);margin-top:6px}
-  .block{margin-bottom:15px}
-  .block .lab{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin-bottom:5px}
-  .block .txt{font-size:15px;line-height:1.7}
-  .block.lit .txt{font-family:"Gowun Batang",serif}
-  .learn-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  /* ---------- learn ---------- */
+  .learn{padding:36px 36px 38px}
+  .learn .top{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
+    border-bottom:1px solid var(--ink);padding-bottom:22px;margin-bottom:28px}
+  .learn .top .hj{font-family:var(--serif);font-size:42px;font-weight:600;letter-spacing:.12em;line-height:1.3}
+  .learn .top .ko{font-size:15px;color:var(--ink-soft);letter-spacing:.04em}
+  .learn .top .src{margin-left:auto;font-family:var(--serif);font-size:12.5px;color:var(--ink-soft);letter-spacing:.08em}
+  .chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:12px;margin-bottom:30px}
+  .ch{border:1px solid var(--line-soft);border-radius:6px;background:var(--paper);padding:16px 8px 14px;text-align:center}
+  .ch .c{font-family:var(--serif);font-size:32px;font-weight:600;line-height:1.3}
+  .ch .hu{font-size:12px;color:var(--ink-soft);margin-top:8px;letter-spacing:.02em}
+  .block{margin-bottom:24px}
+  .block .lab{font-size:11px;font-weight:700;color:var(--vermilion);letter-spacing:.18em;margin-bottom:7px}
+  .block .txt{font-size:15px;line-height:1.8}
+  .block.lit .txt{font-family:var(--serif)}
+  .learn-foot{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
 
-  /* quiz */
-  .quiz{padding:24px 24px 28px}
-  .quiz .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-  .quiz .qhead .t{font-family:"Gowun Batang",serif;font-size:18px}
-  .quiz .qhead .c{font-size:13px;color:var(--ink-soft)}
-  .qbody{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px;min-height:96px}
-  .qbody .qtype{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:9px}
-  .qbody .qtext{font-size:16.5px;line-height:1.6}
-  .qbody .qbig{font-family:"Gowun Batang",serif;font-size:40px;letter-spacing:6px;text-align:center;padding:8px 0}
-  .qopts{display:grid;gap:10px}
-  .qopt{text-align:left;font-size:15.5px;padding:13px 16px;border-radius:12px;border:1px solid var(--line);
-    background:#fff;cursor:pointer;transition:.12s;font-family:inherit}
-  .qopt .hanja{font-family:"Gowun Batang",serif}
-  .qopt:hover{border-color:var(--accent)}
-  .qopt.right{background:#e7f2e5;border-color:var(--good);color:#2c5d3c}
-  .qopt.wrong{background:#f7e6e2;border-color:var(--bad);color:#8a3729}
-  .qopt.dim{opacity:.5}
-  .qexp{font-size:14px;color:var(--ink-soft);margin-top:14px;line-height:1.6;display:none}
-  .result{padding:34px 24px;text-align:center}
-  .result .score{font-family:"Gowun Batang",serif;font-size:52px;color:var(--accent)}
-  .result .msg{font-size:16px;margin:8px 0 22px;color:var(--ink-soft)}
+  /* ---------- quiz ---------- */
+  .quiz{padding:36px 36px 40px}
+  .quiz .qhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px}
+  .quiz .qhead .t{font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:.02em}
+  .quiz .qhead .c{font-size:12px;color:var(--ink-soft);letter-spacing:.05em}
+  .qbody{border-top:1px solid var(--ink);border-bottom:1px solid var(--line);
+    padding:26px 4px;margin-bottom:24px;min-height:96px}
+  .qbody .qtype{font-size:11px;font-weight:700;color:var(--vermilion);letter-spacing:.18em;margin-bottom:12px}
+  .qbody .qtext{font-size:16px;line-height:1.8}
+  .qbody .qbig{font-family:var(--serif);font-size:42px;font-weight:600;letter-spacing:.18em;text-align:center;padding:10px 0 14px}
+  .qopts{display:grid;gap:12px}
+  .qopt{text-align:left;font-size:15px;line-height:1.7;padding:14px 20px;border-radius:6px;
+    border:1px solid var(--line);background:transparent;cursor:pointer;
+    transition:background-color .18s ease,border-color .18s ease}
+  .qopt .hanja{font-family:var(--serif)}
+  .qopt:hover{border-color:var(--ink-soft);background:var(--paper-dim)}
+  .qopt.right{border-color:var(--good);color:var(--good);background:rgba(76,107,82,.06)}
+  .qopt.wrong{border-color:var(--vermilion);color:var(--vermilion);background:rgba(168,60,43,.05)}
+  .qopt.dim{opacity:.45}
+  .qexp{font-size:13.5px;color:var(--ink-soft);margin-top:18px;line-height:1.7;display:none}
+  .result{padding:56px 36px 52px;text-align:center}
+  .result .score{font-family:var(--serif);font-size:48px;font-weight:600;letter-spacing:.06em}
+  .result .score::after{content:"";display:block;width:36px;height:2px;background:var(--vermilion);margin:18px auto 0}
+  .result .msg{font-size:14.5px;margin:20px 0 34px;color:var(--ink-soft)}
   .hidden{display:none}
-  .foot-note{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:16px;line-height:1.6}
+
+  .foot-note{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:40px;
+    line-height:1.7;letter-spacing:.03em}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:560px){
+    body{padding:28px 14px 72px}
+    .topbar{margin-bottom:26px}
+    .prog .bar{width:70px}
+    .cover-title{padding:24px 22px 26px}
+    .home-body{padding:26px 20px 30px}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+    .vtitle{top:12px;right:12px;font-size:13px;padding:10px 6px}
+    .dbox{padding:56px 20px 20px}
+    .dbox .line{font-size:16px}
+    .stage-foot{padding:18px 20px 22px}
+    .learn{padding:26px 20px 30px}
+    .learn .top .hj{font-size:32px}
+    .quiz{padding:26px 20px 30px}
+  }
 </style>
 </head>
 <body>
@@ -332,7 +390,7 @@ function go(view,arg){
 function renderHome(){
   const tiles=IDIOMS.map((it,i)=>`
     <div class="tile ${learned.has(it.id)?'learned':''}" onclick="go('story',${i})">
-      <div class="done">배움 ✓</div>
+      <div class="done">배움</div>
       <div class="h hanja">${it.hanja}</div>
       <div class="k">${it.ko}</div>
       <div class="d">${learned.has(it.id)?it.meaning.slice(0,38)+"…":"이야기로 만나기 →"}</div>
@@ -340,21 +398,25 @@ function renderHome(){
   const canQuiz=learned.size>0;
   app().innerHTML=`
     <div class="card cover">
-      <div class="img" style="background-image:url('images/cover.png')"></div>
-      <div class="veil"></div>
-      <div class="title">
-        <h1>고사성어, 이야기로 읽다</h1>
-        <p>선택하며 읽는 여덟 편의 옛이야기 · 고1 한문</p>
+      <div class="img" style="background-image:url('images/cover.png')">
+        <span class="vtitle hanja">故事成語</span>
+      </div>
+      <div class="cover-title">
+        <div>
+          <h1>고사성어, 이야기로 읽다</h1>
+          <p>선택하며 읽는 여덟 편의 옛이야기 · 고1 한문</p>
+        </div>
+        <span class="seal hanja">文</span>
       </div>
     </div>
-    <div class="card" style="margin-top:16px">
+    <div class="card" style="margin-top:24px">
       <div class="home-body">
         <h2>오늘의 이야기를 고르세요</h2>
         <div class="sub">이야기를 끝까지 읽으면 한자 풀이와 뜻이 열리고, ‘배움’ 표시가 붙어요.</div>
         <div class="grid">${tiles}</div>
         <div class="review-btn">
           <button class="btn primary" ${canQuiz?"":"disabled"} onclick="go('quiz','all')">종합 복습 퀴즈 ${canQuiz?"":"(먼저 하나 배우기)"}</button>
-          ${bestScore?`<span style="align-self:center;font-size:13px;color:var(--ink-soft)">최고 기록 ${bestScore}점</span>`:""}
+          ${bestScore?`<span style="align-self:center;font-size:12px;color:var(--ink-soft)">최고 기록 ${bestScore}점</span>`:""}
         </div>
       </div>
     </div>`;
@@ -467,13 +529,13 @@ function makeQ(idiom,type){
   if(type==="meaning"){
     const opts=shuffle([idiom,...sample(IDIOMS,3,idiom)]);
     return {type:"뜻풀이 연결",text:idiom.meaning,
-      opts:opts.map(o=>`${o.hanja} <span style="color:#8a7355">${o.ko}</span>`),
+      opts:opts.map(o=>`${o.hanja} <span style="color:var(--ink-soft)">${o.ko}</span>`),
       ans:opts.indexOf(idiom),exp:`정답: ${idiom.hanja}(${idiom.ko})`,hanja:false};
   }
   // situation
   const opts=shuffle([idiom,...sample(IDIOMS,3,idiom)]);
   return {type:"상황에 맞는 성어 고르기",text:`상황: ${idiom.situation}`,
-    opts:opts.map(o=>`${o.hanja} <span style="color:#8a7355">${o.ko}</span>`),
+    opts:opts.map(o=>`${o.hanja} <span style="color:var(--ink-soft)">${o.ko}</span>`),
     ans:opts.indexOf(idiom),exp:`정답: ${idiom.hanja}(${idiom.ko}) — ${idiom.meaning}`,hanja:false};
 }
 
@@ -503,7 +565,7 @@ function renderQuiz(){
       </div>
       <div class="qopts" id="qopts">${opts}</div>
       <div class="qexp" id="qexp">${q.exp}</div>
-      <div class="nav" style="margin-top:16px"><span></span>
+      <div class="nav" style="margin-top:20px"><span></span>
         <button class="btn primary hidden" id="qnext" onclick="nextQ()">${qi<quizQs.length-1?'다음 문제 →':'결과 보기 →'}</button></div>
     </div></div>`;
 }
@@ -531,7 +593,7 @@ function renderResult(){
     <div class="card"><div class="result">
       <div class="score hanja">${qScore} / ${total}</div>
       <div class="msg">${msg}</div>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <button class="btn primary" onclick="startQuiz('${qMode}')">다시 풀기</button>
         <button class="btn" onclick="go('home')">목록으로</button>
       </div>
