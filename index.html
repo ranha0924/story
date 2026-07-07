@@ -371,6 +371,11 @@ function saveBest(v){try{localStorage.setItem(KEY+"_best",String(v))}catch(e){}}
 const app=()=>document.getElementById("app");
 function imgPath(idiom,n){return "images/"+idiom.id+"_"+n+".png"}
 
+/* image preloading — 장면 전환이 즉시 보이도록 미리 받아둔다 */
+const preloaded=new Set();
+function preload(src){if(preloaded.has(src))return;preloaded.add(src);const i=new Image();i.src=src;}
+function preloadStory(idiom){[...new Set(idiom.script.map(s=>s.img))].forEach(n=>preload(imgPath(idiom,n)));}
+
 function updateProg(){
   document.getElementById("progText").textContent=learned.size+" / "+IDIOMS.length+" 배움";
   document.getElementById("progFill").style.width=(learned.size/IDIOMS.length*100)+"%";
@@ -380,7 +385,7 @@ function updateProg(){
 function go(view,arg){
   window.scrollTo({top:0,behavior:"smooth"});
   if(view==="home") renderHome();
-  else if(view==="story"){cur=IDIOMS[arg];step=0;answered=false;renderStory();}
+  else if(view==="story"){cur=IDIOMS[arg];step=0;answered=false;preloadStory(cur);renderStory();}
   else if(view==="learn"){renderLearn();}
   else if(view==="quiz") startQuiz(arg);
   updateProg();
@@ -603,6 +608,10 @@ function renderResult(){
 
 /* ---------------- INIT ---------------- */
 renderHome();updateProg();
+/* 첫 화면이 뜬 뒤 한가할 때, 각 이야기의 첫 장면 그림을 미리 받아둔다 */
+(window.requestIdleCallback||function(f){setTimeout(f,1200)})(function(){
+  IDIOMS.forEach(it=>preload(imgPath(it,1)));
+});
 </script>
 </body>
 </html>
